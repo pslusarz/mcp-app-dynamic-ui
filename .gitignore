@@ -23,3 +23,9 @@ env/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Logs
+logs/
+
+# FastHTML session key
+.sesskey

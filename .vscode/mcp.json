@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "mcp-app-dynamic-ui": {
+      "type": "stdio",
+      "command": "uv",
+      "args": ["run", "src/main/server.py"]
+    }
+  }
+}

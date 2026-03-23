@@ -18,19 +18,20 @@ Then start the MCP Inspector:
 ```sh
 export NVM_DIR="$HOME/.nvm" && source "$NVM_DIR/nvm.sh"
 export PATH="/Users/pjs/.local/bin:$PATH"
-mcp-inspector uv run fastmcp run src/main/server.py --reload
+mcp-inspector uv run src/main/server.py
 ```
 
 The inspector UI will be available at **http://localhost:6274**.
 
-After saving a file, FastMCP restarts cleanly. Click **Reconnect** in the inspector UI to pick up the changes.
+After changing code, click **Reconnect** in the inspector UI — it spawns a fresh server process each time, so you always get the latest code.
 
 ## Known Issues
 
-**Do NOT use `uv run --watch` with the inspector.**
-The inspector uses stdio transport — it spawns the server as a subprocess per connection. The `--watch` flag causes uv to restart the server process on file changes, which breaks the stdio pipe (`EPIPE` error). This triggers an endless reconnect loop flooding the logs.
+**Do NOT use `uv run --watch` or `fastmcp run --reload` with the inspector.**
+- `uv run --watch` breaks the stdio pipe (`EPIPE`) and triggers an endless reconnect loop
+- `fastmcp run --reload` crashes the inspector's Node process entirely with `Error: Not connected` when a reload fires mid-connection
 
-**Why `fastmcp run --reload` works instead:** FastMCP handles the reload internally without killing the outer process, so the stdio pipe stays intact.
+Both approaches kill the inspector. The simple fix: just click Reconnect in the UI after code changes.
 
 ## Troubleshooting
 

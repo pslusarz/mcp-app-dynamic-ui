@@ -1,0 +1,12 @@
+Text Credits
+============
+
+"The Pavilion on the Links" by Robert Louis Stevenson
+Source: Project Gutenberg
+  Title:  New Arabian Nights
+  Author: Robert Louis Stevenson
+  eBook:  #839
+  URL:    https://www.gutenberg.org/ebooks/839
+
+This text is in the public domain in the United States.
+Project Gutenberg License: https://www.gutenberg.org/policy/license.html

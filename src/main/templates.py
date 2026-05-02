@@ -136,8 +136,3 @@ def render_shell() -> str:
         ),
     )
     return to_xml(page)
-
-
-def render_fragment(content: str) -> str:
-    """HTML fragment swapped into #content on each tool call."""
-    return to_xml(Pre(content, cls="content"))

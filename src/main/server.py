@@ -8,7 +8,8 @@ from fastmcp.apps.config import AppConfig, ResourceCSP
 from fastmcp.server.middleware.middleware import Middleware, MiddlewareContext
 from fastmcp.tools.tool import ToolResult
 from mcp.types import TextContent
-from templates import render_shell, render_fragment
+from fasthtml.common import Pre, to_xml
+from templates import render_shell
 
 Path("logs").mkdir(exist_ok=True)
 logging.basicConfig(
@@ -69,7 +70,7 @@ def reader(page_number: Annotated[int, Field(ge=1, description="Page number, sta
     return ToolResult(
         content=[TextContent(type="text", text=f"Page {page_number} of {TOTAL_PAGES}")],
         structured_content=page.model_dump(),
-        meta={"html": render_fragment(content)},
+        meta={"html": to_xml(Pre(content, cls="content"))},
     )
 
 

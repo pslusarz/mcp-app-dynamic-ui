@@ -4,6 +4,8 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field
 from fastmcp import FastMCP
+from fastmcp.apps.config import AppConfig, ResourceCSP
+from fastmcp.server.middleware.middleware import Middleware, MiddlewareContext
 from fastmcp.tools.tool import ToolResult
 from mcp.types import TextContent
 from templates import render_shell, render_fragment
@@ -38,12 +40,26 @@ class Page(BaseModel):
     content: str
 
 
-@mcp.resource("ui://reader", mime_type="text/html;profile=mcp-app")
+# whitelist resources from templates.py, Claude app was unhappy without it
+_READER_CSP = ResourceCSP(
+    resource_domains=[
+        "https://cdn.jsdelivr.net",
+        "https://fonts.googleapis.com",
+        "https://fonts.gstatic.com",
+    ],
+)
+
+
+@mcp.resource(
+    "ui://reader",
+    mime_type="text/html;profile=mcp-app",
+    app=AppConfig(csp=_READER_CSP),
+)
 def reader_ui() -> str:
     return render_shell()
 
 
-@mcp.tool(meta={"ui": {"resourceUri": "ui://reader"}})
+@mcp.tool(app=AppConfig(resource_uri="ui://reader", csp=_READER_CSP))
 def reader(page_number: Annotated[int, Field(ge=1, description="Page number, starting at 1")]) -> ToolResult:
     """Read 'The Pavilion on the Links' by Robert Louis Stevenson.
     Allows interactive reading of the story page by page."""

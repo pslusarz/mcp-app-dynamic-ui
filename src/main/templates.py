@@ -80,10 +80,7 @@ function syncModelContext(page_number, total_pages) {
 app.ontoolresult = (result) => {
     const meta = result._meta ?? {};
     document.getElementById("content").innerHTML = meta.html ?? "";
-    if (meta.page_number) {
-        updateNav(meta.page_number, meta.total_pages);
-        syncModelContext(meta.page_number, meta.total_pages);
-    }
+    if (meta.page_number) updateNav(meta.page_number, meta.total_pages);
 };
 
 // User-initiated via Fixi button click

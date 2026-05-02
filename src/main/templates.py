@@ -141,23 +141,3 @@ def render_shell() -> str:
 def render_fragment(content: str) -> str:
     """HTML fragment swapped into #content on each tool call."""
     return to_xml(Pre(content, cls="content"))
-
-
-def render_page(page_number: int, total_pages: int, content: str) -> str:
-    """Standalone full page — used by app.py only."""
-    page = Html(
-        Head(Title("The Pavilion on the Links"), *_HEAD),
-        Body(
-            Main(
-                Div(
-                    Button("← Previous"),
-                    Span(f"Page {page_number} of {total_pages}", cls="page-info"),
-                    Button("Next →"),
-                    cls="nav",
-                ),
-                Div(content, cls="content"),
-                cls="reader",
-            )
-        ),
-    )
-    return to_xml(page)

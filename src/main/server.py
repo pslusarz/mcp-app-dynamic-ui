@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 from typing import Annotated
 
+from pydantic import Field
 from fastmcp import FastMCP
 from fastmcp.apps.config import AppConfig, ResourceCSP
 from fastmcp.server.middleware.middleware import Middleware, MiddlewareContext

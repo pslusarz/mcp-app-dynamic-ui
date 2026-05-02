@@ -2,7 +2,6 @@ import logging
 from pathlib import Path
 from typing import Annotated
 
-from pydantic import BaseModel, Field
 from fastmcp import FastMCP
 from fastmcp.apps.config import AppConfig, ResourceCSP
 from fastmcp.server.middleware.middleware import Middleware, MiddlewareContext
@@ -35,12 +34,6 @@ _lines = Path("src/data/pavilion.txt").read_text(encoding="utf-8").splitlines()
 TOTAL_PAGES = (len(_lines) + LINES_PER_PAGE - 1) // LINES_PER_PAGE
 
 
-class Page(BaseModel):
-    page_number: int
-    total_pages: int
-    content: str
-
-
 # whitelist resources from templates.py, Claude app was unhappy without it
 _READER_CSP = ResourceCSP(
     resource_domains=[
@@ -66,11 +59,13 @@ def reader(page_number: Annotated[int, Field(ge=1, description="Page number, sta
     Allows interactive reading of the story page by page."""
     start = (page_number - 1) * LINES_PER_PAGE
     content = "\n".join(_lines[start: start + LINES_PER_PAGE])
-    page = Page(page_number=page_number, total_pages=TOTAL_PAGES, content=content)
     return ToolResult(
         content=[TextContent(type="text", text=f"Page {page_number} of {TOTAL_PAGES}")],
-        structured_content=page.model_dump(),
-        meta={"html": to_xml(Pre(content, cls="content"))},
+        meta={
+            "html": to_xml(Pre(content, cls="content")),
+            "page_number": page_number,
+            "total_pages": TOTAL_PAGES,
+        },
     )
 
 

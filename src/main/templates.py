@@ -72,11 +72,18 @@ function updateNav(page_number, total_pages) {
     document.getElementById("page-info").textContent = `Page ${page_number} of ${total_pages}`;
 }
 
+function syncModelContext(page_number, total_pages) {
+    app.updateModelContext({ structuredContent: { page_number, total_pages } });
+}
+
 // LLM-initiated tool call result pushed by host
 app.ontoolresult = (result) => {
-    const sc = result.structuredContent;
-    document.getElementById("content").innerHTML = result._meta?.html ?? "";
-    if (sc) updateNav(sc.page_number, sc.total_pages);
+    const meta = result._meta ?? {};
+    document.getElementById("content").innerHTML = meta.html ?? "";
+    if (meta.page_number) {
+        updateNav(meta.page_number, meta.total_pages);
+        syncModelContext(meta.page_number, meta.total_pages);
+    }
 };
 
 // User-initiated via Fixi button click
@@ -91,9 +98,12 @@ document.addEventListener("fx:config", (evt) => {
     // Override cfg.fetch — Fixi always calls cfg.fetch(), setting cfg.response here has no effect
     evt.detail.cfg.fetch = () => app.callServerTool({ name: toolName, arguments: args })
         .then(result => {
-            const sc = result.structuredContent;
-            if (sc) updateNav(sc.page_number, sc.total_pages);
-            return new Response(result._meta?.html ?? "", {
+            const meta = result._meta ?? {};
+            if (meta.page_number) {
+                updateNav(meta.page_number, meta.total_pages);
+                syncModelContext(meta.page_number, meta.total_pages);
+            }
+            return new Response(meta.html ?? "", {
                 headers: { "content-type": "text/html" },
             });
         });

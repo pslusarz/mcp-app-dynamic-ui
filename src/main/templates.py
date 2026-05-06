@@ -74,6 +74,11 @@ function updateNav(page_number, total_pages) {
 
 function syncModelContext(page_number, total_pages) {
     app.updateModelContext({ structuredContent: { page_number, total_pages } });
+    app.sendMessage({
+        role: "user",
+        content: [{ type: "text", text: `User turned to page ${page_number} of ${total_pages}.` }],
+        structuredContent: { page_number, total_pages },
+    });
 }
 
 // LLM-initiated tool call result pushed by host

@@ -54,7 +54,7 @@ def reader_ui() -> str:
     return render_shell()
 
 
-@mcp.tool(app=AppConfig(resource_uri="ui://reader", csp=_READER_CSP))
+@mcp.tool(app=AppConfig(resource_uri="ui://reader"))
 def reader(page_number: Annotated[int, Field(ge=1, description="Page number, starting at 1")]) -> ToolResult:
     """Read 'The Pavilion on the Links' by Robert Louis Stevenson.
     Allows interactive reading of the story page by page."""

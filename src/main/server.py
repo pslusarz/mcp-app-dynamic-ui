@@ -42,6 +42,9 @@ _READER_CSP = ResourceCSP(
         "https://fonts.googleapis.com",
         "https://fonts.gstatic.com",
     ],
+    connect_domains=[
+        "https://cdn.jsdelivr.net",
+    ],
 )
 
 
